@@ -93,7 +93,7 @@ export default function ExpertsGrid({
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="font-heading font-bold text-xl text-brand-navy">
+        <h2 className=" font-bold text-xl text-brand-navy">
           {isLoading
             ? `Finding contractors near ${cityName}…`
             : experts.length > 0
@@ -112,7 +112,7 @@ export default function ExpertsGrid({
         <p className="text-sm text-brand-gray -mt-4">
           Select up to {MAX_SELECTION} contractors below, then fill out the form to request free quotes.
           {selectedIds.length > 0 && (
-            <span className="ml-2 font-semibold text-brand-blue">
+            <span className="ml-2 font-semibold text-brand-action">
               {selectedIds.length}/{MAX_SELECTION} selected
             </span>
           )}
@@ -162,7 +162,7 @@ export default function ExpertsGrid({
           {experts.length === 0 && status !== 'failed' && (
             <div className="card p-8 text-center">
               <div className="text-4xl mb-3">🔍</div>
-              <h3 className="font-heading font-bold text-brand-navy mb-2">
+              <h3 className=" font-bold text-brand-navy mb-2">
                 No contractors listed yet in {cityName}
               </h3>
               <p className="text-sm text-brand-gray mb-5">

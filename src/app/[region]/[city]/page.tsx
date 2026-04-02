@@ -40,9 +40,9 @@ export default async function CityPage({ params }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
       <nav className="text-sm text-brand-gray mb-6 flex items-center gap-1 flex-wrap">
-        <Link href="/" className="hover:text-brand-blue">Home</Link>
+        <Link href="/" className="hover:text-brand-action">Home</Link>
         <span>/</span>
-        <Link href={`/${region}`} className="hover:text-brand-blue">{loc.region_name}</Link>
+        <Link href={`/${region}`} className="hover:text-brand-action">{loc.region_name}</Link>
         <span>/</span>
         <span className="text-brand-navy font-medium">{loc.city_name}</span>
       </nav>
@@ -55,7 +55,7 @@ export default async function CityPage({ params }: Props) {
       </p>
 
       {/* Service selection */}
-      <h2 className="font-heading font-bold text-xl text-brand-navy mb-5">
+      <h2 className=" font-bold text-xl text-brand-navy mb-5">
         Choose a Service in {loc.city_name}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -65,14 +65,14 @@ export default async function CityPage({ params }: Props) {
             href={`/${region}/${city}/${s.slug}`}
             className="card p-6 group flex flex-col"
           >
-            <h3 className="font-heading font-bold text-brand-navy text-lg mb-2 group-hover:text-brand-blue transition-colors">
+            <h3 className=" font-bold text-brand-navy text-lg mb-2 group-hover:text-brand-action transition-colors">
               {s.name} in {loc.city_name}
             </h3>
             <p className="text-sm text-brand-gray mb-4 flex-1">
-              Compare vetted {s.shortName.toLowerCase()} contractors serving {loc.city_name}, {loc.region_code}.
+              Compare vetted {s.name.toLowerCase()} contractors serving {loc.city_name}, {loc.region_code}.
             </p>
             <span className="btn-primary text-sm self-start py-2">
-              Find {s.shortName} Pros →
+              Find {s.name} Pros →
             </span>
           </Link>
         ))}
@@ -80,7 +80,7 @@ export default async function CityPage({ params }: Props) {
 
       {/* Zip codes served */}
       <div className="mt-10 bg-brand-light rounded-xl p-6">
-        <h2 className="font-heading font-bold text-brand-navy mb-3">
+        <h2 className=" font-bold text-brand-navy mb-3">
           Areas We Serve in {loc.city_name}
         </h2>
         <p className="text-sm text-brand-gray mb-3">

@@ -49,7 +49,7 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
     <div
       className={`card flex flex-col h-full transition-all duration-200 ${
         isSelected
-          ? 'ring-2 ring-brand-blue shadow-md'
+          ? 'ring-2 ring-brand-action shadow-md'
           : selectionDisabled
           ? 'opacity-60'
           : 'hover:shadow-md'
@@ -61,13 +61,13 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
         onClick={() => canToggle && onToggle(expert.id)}
         disabled={!canToggle}
         className={`flex items-center gap-2 px-4 pt-4 pb-0 text-sm font-semibold transition-colors w-full text-left
-          ${isSelected ? 'text-brand-blue' : 'text-brand-gray'}
+          ${isSelected ? 'text-brand-action' : 'text-brand-gray'}
           ${!canToggle ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         aria-pressed={isSelected}
       >
         <span
           className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors
-            ${isSelected ? 'bg-brand-blue border-brand-blue' : 'border-gray-300 bg-white'}`}
+            ${isSelected ? 'bg-brand-action border-brand-action' : 'border-gray-300 bg-white'}`}
         >
           {isSelected && (
             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,7 +90,7 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
                 className="w-14 h-14 rounded-lg object-cover border border-gray-100"
               />
             ) : (
-              <div className="w-14 h-14 rounded-lg bg-brand-light flex items-center justify-center text-brand-blue font-heading font-black text-xl border border-gray-100">
+              <div className="w-14 h-14 rounded-lg bg-brand-light flex items-center justify-center text-brand-action  font-black text-xl border border-gray-100">
                 {displayName.charAt(0)}
               </div>
             )}
@@ -105,7 +105,7 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
                 className="w-14 h-14 rounded-lg object-cover border border-gray-100 shrink-0"
               />
             ) : (
-              <div className="w-14 h-14 rounded-lg bg-brand-light flex items-center justify-center text-brand-blue font-heading font-black text-xl border border-gray-100 shrink-0">
+              <div className="w-14 h-14 rounded-lg bg-brand-light flex items-center justify-center text-brand-action  font-black text-xl border border-gray-100 shrink-0">
                 {displayName.charAt(0)}
               </div>
             )}
@@ -116,12 +116,12 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
           {profileHref ? (
             <Link
               href={profileHref}
-              className="font-heading font-bold text-brand-navy text-sm hover:text-brand-blue hover:underline leading-tight block truncate"
+              className=" font-bold text-brand-navy text-sm hover:text-brand-action hover:underline leading-tight block truncate"
             >
               {displayName}
             </Link>
           ) : (
-            <p className="font-heading font-bold text-brand-navy text-sm leading-tight truncate">{displayName}</p>
+            <p className=" font-bold text-brand-navy text-sm leading-tight truncate">{displayName}</p>
           )}
           {location && <p className="text-xs text-brand-gray mt-0.5">{location}</p>}
           {expert.rating != null && (
@@ -185,7 +185,7 @@ export default function ExpertCard({ expert, ctaText, isSelected, onToggle, sele
             href={expert.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-center text-sm text-brand-blue hover:underline py-1"
+            className="text-center text-sm text-brand-action hover:underline py-1"
           >
             {ctaText}
           </a>

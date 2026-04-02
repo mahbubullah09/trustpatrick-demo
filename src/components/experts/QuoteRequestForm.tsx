@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import type { Expert } from '@/lib/api';
-
-const API_BASE_URL  = 'https://pros.trustpatrick.com/api';
-const QUOTE_API_URL = `${API_BASE_URL}/quote_requests`;
-const LEAD_API_URL  = `${API_BASE_URL}/lead_captures`;
-// const GOOGLE_PLACES_KEY = 'AIzaSyBr60Ncy1_dKfWA7FI5xzJwcTv7HLFwo_A';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchGeneralServices, submitQuote, resetQuote } from '@/store/slices/quoteSlice';
 
 const RESIDENTIAL_TYPE_ID   = 1;
 const RESIDENTIAL_TYPE_TEXT = 'Residential';
@@ -16,15 +13,6 @@ const TIMEFRAME_OPTIONS = [
   'No Urgency - 3 to 6 Weeks',
   'Price Shopping - Price Comparing',
 ];
-
-interface ServiceType      { key: string; value: string }
-interface MainCategoryItem { type_id: number; categories: { key: string; value: string }[] }
-interface ServiceCategory  { type_id: number; main_category_id: number; key: string; value: string }
-interface GeneralCategories {
-  serviceTypes:      ServiceType[];
-  mainCategories:    MainCategoryItem[];
-  serviceCategories: ServiceCategory[];
-}
 
 interface Props {
   selectedExperts:      Expert[];
@@ -37,6 +25,9 @@ export default function QuoteRequestForm({
   noContractors = false,
   serviceCategoryCodes,
 }: Props) {
+  const dispatch = useAppDispatch();
+  const { generalData, submitting, submitted, submitError } = useAppSelector((s) => s.quote);
+
   const locked = !noContractors && selectedExperts.length === 0;
 
   const [form, setForm] = useState({
@@ -45,31 +36,17 @@ export default function QuoteRequestForm({
     timeframe: '', description: '',
   });
 
-  const [generalData,      setGeneralData]      = useState<GeneralCategories | null>(null);
   const [selectedMainId,   setSelectedMainId]   = useState('');
   const [selectedMainText, setSelectedMainText] = useState('');
   const [selectedCatCode,  setSelectedCatCode]  = useState('');
   const [selectedCatText,  setSelectedCatText]  = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted,  setSubmitted]  = useState(false);
-  const [error,      setError]      = useState<string | null>(null);
 
+  // Fetch service categories via Redux thunk
   useEffect(() => {
     if (!serviceCategoryCodes?.length) return;
-    const params = new URLSearchParams();
-    serviceCategoryCodes.forEach((c) => params.append('service_category_codes[]', c));
-    fetch(`${API_BASE_URL}/general_services?${params.toString()}`, { headers: { Accept: 'application/json' } })
-      .then((r) => r.json())
-      .then((data) => setGeneralData({
-        serviceTypes:      data.service_category_types ?? [],
-        mainCategories:    data.main_categories        ?? [],
-        serviceCategories: data.service_categories     ?? [],
-      }))
-      .catch(() => {});
+    dispatch(fetchGeneralServices(serviceCategoryCodes));
+    return () => { dispatch(resetQuote()); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  /* Google Places — disabled until Maps JS API is enabled
-  useEffect(() => { ... }, []); */
 
   const filteredMainCategories = generalData
     ? (generalData.mainCategories.find((m) => m.type_id === RESIDENTIAL_TYPE_ID)?.categories ?? [])
@@ -99,40 +76,28 @@ export default function QuoteRequestForm({
     setSelectedCatText(e.target.options[e.target.selectedIndex].text);
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     if (locked) return;
-    setSubmitting(true); setError(null);
-    try {
-      const res = await fetch(noContractors ? LEAD_API_URL : QUOTE_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          first_name: form.firstName, last_name: form.lastName,
-          email: form.email, phone: form.phone,
-          address: form.address, city: form.city, state: form.state, zip: form.zip,
-          timeframe: form.timeframe, description: form.description,
-          service_type_id: RESIDENTIAL_TYPE_ID, service_type_text: RESIDENTIAL_TYPE_TEXT,
-          ...(selectedMainId  && { main_category_id: selectedMainId,  main_category_text: selectedMainText }),
-          ...(selectedCatCode && { service_category_code: selectedCatCode, service_category_text: selectedCatText }),
-          ...(noContractors ? {} : {
-            contractor_ids:   selectedExperts.map((ex) => ex.id),
-            contractor_names: selectedExperts.map((ex) => ex.business_name ?? ex.name),
-          }),
-        }),
-      });
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
-      setSubmitted(true);
-    } catch (err) {
-      setError((err as Error).message ?? 'Something went wrong.');
-    } finally {
-      setSubmitting(false);
-    }
+    dispatch(submitQuote({
+      first_name: form.firstName, last_name: form.lastName,
+      email: form.email, phone: form.phone,
+      address: form.address, city: form.city, state: form.state, zip: form.zip,
+      timeframe: form.timeframe, description: form.description,
+      service_type_id: RESIDENTIAL_TYPE_ID, service_type_text: RESIDENTIAL_TYPE_TEXT,
+      ...(selectedMainId  && { main_category_id: selectedMainId, main_category_text: selectedMainText }),
+      ...(selectedCatCode && { service_category_code: selectedCatCode, service_category_text: selectedCatText }),
+      ...(noContractors ? {} : {
+        contractor_ids:   selectedExperts.map((ex) => ex.id),
+        contractor_names: selectedExperts.map((ex) => ex.business_name ?? ex.name),
+      }),
+      isLead: noContractors,
+    }));
   }
 
   // ── Field styles ──
   const field = `w-full rounded-lg px-3.5 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2`;
-  const activeField  = `${field} bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-brand-blue focus:border-brand-blue`;
+  const activeField  = `${field} bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-brand-action focus:border-brand-action`;
   const lockedField  = `${field} bg-gray-50 border border-gray-200 text-gray-400 cursor-not-allowed`;
   const inputClass   = locked ? lockedField : activeField;
 
@@ -145,7 +110,7 @@ export default function QuoteRequestForm({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="font-heading font-bold text-gray-900 text-lg mb-1">
+        <h3 className="font-bold text-gray-900 text-lg mb-1">
           {noContractors ? "You're on the List!" : 'Quote Request Sent!'}
         </h3>
         <p className="text-sm text-gray-500 max-w-xs mx-auto">
@@ -162,7 +127,6 @@ export default function QuoteRequestForm({
 
       {/* ── Header band ── */}
       {locked ? (
-        /* Locked state — muted grey header */
         <div className="bg-gray-50 border-b border-gray-200 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
@@ -178,8 +142,6 @@ export default function QuoteRequestForm({
               </p>
             </div>
           </div>
-
-          {/* Blurred preview of form fields */}
           <div className="mt-4 space-y-2.5 select-none pointer-events-none blur-[2px] opacity-40">
             <div className="grid grid-cols-2 gap-2">
               <div className="h-9 bg-gray-200 rounded-lg" />
@@ -196,18 +158,17 @@ export default function QuoteRequestForm({
           </div>
         </div>
       ) : (
-        /* Unlocked / no-contractors header */
-        <div className={`px-6 py-5 border-b ${noContractors ? 'bg-amber-50 border-amber-100' : 'bg-brand-blue/5 border-brand-blue/10'}`}>
+        <div className={`px-6 py-5 border-b ${noContractors ? 'bg-amber-50 border-amber-100' : 'bg-brand-action/5 border-brand-action/10'}`}>
           <div className="flex items-start gap-3">
             <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 mt-0.5
-              ${noContractors ? 'bg-amber-100' : 'bg-brand-blue/10'}`}>
+              ${noContractors ? 'bg-amber-100' : 'bg-brand-action/10'}`}>
               {noContractors ? (
                 <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-brand-action" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
@@ -225,8 +186,8 @@ export default function QuoteRequestForm({
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {selectedExperts.map((e) => (
                     <span key={e.id}
-                      className="inline-flex items-center gap-1 text-xs bg-white border border-brand-blue/20
-                        text-brand-blue px-2 py-0.5 rounded-full font-medium">
+                      className="inline-flex items-center gap-1 text-xs bg-white border border-brand-action/20
+                        text-brand-action px-2 py-0.5 rounded-full font-medium">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
                       {e.business_name ?? e.name ?? 'Contractor'}
                     </span>
@@ -238,7 +199,7 @@ export default function QuoteRequestForm({
         </div>
       )}
 
-      {/* ── Form body (hidden when locked) ── */}
+      {/* ── Form body ── */}
       {!locked && (
         <div className="bg-white px-6 py-6">
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -324,7 +285,7 @@ export default function QuoteRequestForm({
             {/* Project location */}
             <div className="rounded-xl bg-gray-50 border border-gray-100 p-4 space-y-3">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3.5 h-3.5 text-brand-action" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -387,13 +348,13 @@ export default function QuoteRequestForm({
                 className={`${activeField} resize-none`} />
             </div>
 
-            {error && (
+            {submitError && (
               <div className="flex items-start gap-2 text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2.5">
                 <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {error}
+                {submitError}
               </div>
             )}
 

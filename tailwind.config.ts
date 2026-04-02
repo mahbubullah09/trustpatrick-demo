@@ -5,24 +5,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // TrustPatrick palette extracted from site
+        // TrustPatrick palette — all shades derived from primary #001b33
         brand: {
-          navy:    '#1a2b4a',   // deep navy — primary text / header
-          blue:    '#2563eb',   // action blue — CTAs
-          orange:  '#f97316',   // accent orange — highlights
-          gold:    '#f59e0b',   // warm gold — stars / trust badges
-          light:   '#f0f4ff',   // very light blue — section bg
-          gray:    '#6b7280',   // body text gray
-          dark:    '#0f172a',   // near-black
+          // ── Primary scale (dark → light) ──
+          darker:  '#000d18',   // deepest — top bar bg
+          dark:    '#001424',   // footer bg
+          navy:    '#001b33',   // PRIMARY — base color
+          mid:     '#002d54',   // cards, sidebar panels
+          muted:   '#1a4a6e',   // secondary text on dark bg / borders
+          action:  '#1a5a8a',   // CTAs, links, buttons — lighter navy shade
+          soft:    '#2e6f9e',   // hover on action
+          // ── Tints ──
+          light:   '#e8f1f8',   // section bg — very light tint of primary
+          pale:    '#f0f5fa',   // card bg, inputs
+          // ── Accents (kept minimal) ──
+          orange:  '#f97316',   // highlights only
+          gold:    '#f59e0b',   // stars / trust badges
+          gray:    '#6b7280',   // body text
           white:   '#ffffff',
         },
       },
       fontFamily: {
-        heading: ['var(--font-heading)', 'Georgia', 'serif'],
-        body:    ['var(--font-body)', 'system-ui', 'sans-serif'],
+        sans: ['Source Sans Pro', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(135deg, #1a2b4a 0%, #2563eb 100%)',
+        'hero-gradient': 'linear-gradient(135deg, #001b33 0%, #1a5a8a 100%)',
         'cta-gradient':  'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)',
       },
     },

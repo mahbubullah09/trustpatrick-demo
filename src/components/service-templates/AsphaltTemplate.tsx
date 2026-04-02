@@ -1,16 +1,5 @@
 import ExpertsGrid from '@/components/experts/ExpertsGrid';
-import type { Expert } from '@/lib/api';
-
-interface Props {
-  city: string;
-  region: string;
-  regionCode: string;
-  initialExperts: Expert[];
-  zipCodes: string[];
-  serviceCategoryCodes: string[];
-  ctaText: string;
-  cacheKey: string;
-}
+import type { ServiceTemplateProps } from './index';
 
 export default function AsphaltTemplate({
   city,
@@ -21,7 +10,7 @@ export default function AsphaltTemplate({
   serviceCategoryCodes,
   ctaText,
   cacheKey,
-}: Props) {
+}: ServiceTemplateProps) {
   return (
     <div className="space-y-8 prose-sm max-w-none">
 
@@ -38,7 +27,7 @@ export default function AsphaltTemplate({
 
       {/* Intro */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-3">
+        <h2 className=" font-bold text-brand-navy text-xl mb-3">
           Asphalt Paving in {city}, {region}
         </h2>
         <p className="text-brand-gray leading-relaxed mb-3">
@@ -57,7 +46,7 @@ export default function AsphaltTemplate({
 
       {/* Cost guide */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-4">
+        <h2 className=" font-bold text-brand-navy text-xl mb-4">
           Asphalt Driveway Cost Guide for {city}
         </h2>
         <p className="text-brand-gray mb-4">
@@ -82,7 +71,7 @@ export default function AsphaltTemplate({
               ].map(([type, cost, note]) => (
                 <tr key={type as string} className="even:bg-gray-50">
                   <td className="px-4 py-2 border border-gray-200 text-brand-dark">{type}</td>
-                  <td className="px-4 py-2 border border-gray-200 text-brand-blue font-semibold">{cost}</td>
+                  <td className="px-4 py-2 border border-gray-200 text-brand-action font-semibold">{cost}</td>
                   <td className="px-4 py-2 border border-gray-200 text-brand-gray">{note}</td>
                 </tr>
               ))}
@@ -96,7 +85,7 @@ export default function AsphaltTemplate({
 
       {/* What to look for */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-4">
+        <h2 className=" font-bold text-brand-navy text-xl mb-4">
           How to Choose an Asphalt Contractor in {city}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -141,7 +130,7 @@ export default function AsphaltTemplate({
 
       {/* FAQ */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-5">
+        <h2 className=" font-bold text-brand-navy text-xl mb-5">
           Asphalt Driveway FAQs for {city} Homeowners
         </h2>
         <div className="space-y-5">
@@ -166,7 +155,7 @@ export default function AsphaltTemplate({
             <details key={q} className="group border-b border-gray-100 pb-4 last:border-0 last:pb-0">
               <summary className="font-semibold text-brand-navy text-sm cursor-pointer flex items-start justify-between gap-3 list-none">
                 <span>{q}</span>
-                <span className="text-brand-blue text-lg mt-0.5 flex-shrink-0 group-open:rotate-45 transition-transform">+</span>
+                <span className="text-brand-action text-lg mt-0.5 flex-shrink-0 group-open:rotate-45 transition-transform">+</span>
               </summary>
               <p className="text-sm text-brand-gray mt-3 leading-relaxed">{a}</p>
             </details>

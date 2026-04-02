@@ -15,11 +15,11 @@ export default function HomePage() {
       {/* Hero */}
       <section className="bg-hero-gradient text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="font-heading text-4xl md:text-5xl font-black mb-4 leading-tight">
+          <h1 className=" text-4xl md:text-5xl font-black mb-4 leading-tight">
             Find Trusted Driveway <br className="hidden md:block" />
             Contractors Near You
           </h1>
-          <p className="text-blue-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+          <p className="text-white/75 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
             Compare vetted asphalt and concrete pros in your city. Free estimates, real reviews,
             zero spam.
           </p>
@@ -52,10 +52,10 @@ export default function HomePage() {
               { step: '4', title: 'Get Estimates', desc: 'Contact pros directly for free, no-obligation quotes.' },
             ].map(({ step, title, desc }) => (
               <div key={step} className="flex flex-col items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-brand-blue text-white font-heading font-black text-xl flex items-center justify-center shadow-md">
+                <div className="w-12 h-12 rounded-full bg-brand-action text-white  font-black text-xl flex items-center justify-center shadow-md">
                   {step}
                 </div>
-                <h3 className="font-heading font-bold text-brand-navy">{title}</h3>
+                <h3 className=" font-bold text-brand-navy">{title}</h3>
                 <p className="text-sm text-brand-gray">{desc}</p>
               </div>
             ))}

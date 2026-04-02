@@ -1,3 +1,71 @@
+// ── Company Profile ─────────────────────────────────────────────────────────
+
+export interface CompanyReview {
+  customer_name: string;
+  ratings: number;
+  content: string;
+}
+
+export interface CompanyComplaint {
+  customer_name: string;
+  content: string;
+}
+
+export interface CompanyGalleryItem {
+  file_name: string;
+  file_name_thumb: string;
+}
+
+export interface CompanyServiceArea {
+  zip_code: string;
+  city: string;
+  state: string;
+}
+
+export interface CompanyService {
+  service_category_type_id: number;
+  service_category_type: string;
+  main_category_id: number;
+  main_category: string;
+  service_category: string;
+}
+
+export interface CompanyProfile {
+  company_name: string;
+  slug: string;
+  status: string;
+  initials: string;
+  logo: string | null;
+  company_mailing_address: string;
+  city: string;
+  state_name: string;
+  zipcode: string;
+  company_bio: string | null;
+  averageratings: { rating: number };
+  reviews: CompanyReview[];
+  complaints: CompanyComplaint[];
+  gallery: CompanyGalleryItem[];
+  service_areas: CompanyServiceArea[];
+  services: CompanyService[];
+}
+
+export async function fetchCompanyBySlug(slug: string): Promise<CompanyProfile | null> {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/company_by_slug?company_slug=${encodeURIComponent(slug)}`,
+      { next: { revalidate: 300 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.error > 0) return null;
+    return data.company as CompanyProfile;
+  } catch {
+    return null;
+  }
+}
+
+// ── Experts ──────────────────────────────────────────────────────────────────
+
 export interface Expert {
   id: string | number;
   slug?: string;

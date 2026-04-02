@@ -14,7 +14,7 @@ const ICONS: Record<string, string> = {
 const COLORS: Record<string, string> = {
   success: 'bg-green-600',
   error:   'bg-red-600',
-  info:    'bg-brand-blue',
+  info:    'bg-brand-action',
 };
 
 export default function ToastContainer() {

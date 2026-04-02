@@ -131,7 +131,7 @@ export default function SearchableSelect({
           type="button"
           onClick={() => select('')}
           className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-brand-light
-            ${!value ? 'text-brand-blue font-semibold bg-blue-50' : 'text-brand-gray'}`}
+            ${!value ? 'text-brand-action font-semibold bg-brand-light' : 'text-brand-gray'}`}
         >
           {allLabel}
         </button>
@@ -147,7 +147,7 @@ export default function SearchableSelect({
               type="button"
               onClick={() => select(opt.value)}
               className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-brand-light
-                ${value === opt.value ? 'text-brand-blue font-semibold bg-blue-50' : 'text-brand-dark'}`}
+                ${value === opt.value ? 'text-brand-action font-semibold bg-brand-light' : 'text-brand-dark'}`}
             >
               {opt.label}
             </button>

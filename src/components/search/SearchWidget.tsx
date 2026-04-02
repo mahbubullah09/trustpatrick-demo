@@ -6,6 +6,7 @@ import { getAllRegions, getCitiesInRegion, locations, slugify } from '@/data/loc
 import { services } from '@/data/services';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setRegion, setCity, setService, addRecentSearch } from '@/store/slices/searchSlice';
+// addRecentSearch kept for search history (can be re-enabled later)
 import { closeSearchDrawer } from '@/store/slices/uiSlice';
 import {
   selectRegionCode,
@@ -13,18 +14,18 @@ import {
   selectCitySlug,
   selectServiceSlug,
   selectSearchPath,
-  selectRecentSearches,
 } from '@/store/selectors';
 import SearchableSelect from './SearchableSelect';
 
 interface Props {
-  compact?:    boolean;
-  hideRegion?: boolean;
+  compact?:     boolean;
+  hideRegion?:  boolean;
+  countyMode?:  boolean; // lock widget to county-only mode (for county pages)
 }
 
 type SearchMode = 'state' | 'county';
 
-export default function SearchWidget({ compact = false, hideRegion = false }: Props) {
+export default function SearchWidget({ compact = false, hideRegion = false, countyMode = false }: Props) {
   const dispatch = useAppDispatch();
   const router   = useRouter();
 
@@ -33,9 +34,8 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
   const citySlug       = useAppSelector(selectCitySlug);
   const serviceSlug    = useAppSelector(selectServiceSlug);
   const searchPath     = useAppSelector(selectSearchPath);
-  const recentSearches = useAppSelector(selectRecentSearches);
-
-  const [searchMode, setSearchMode] = useState<SearchMode>('state');
+  // If hideRegion (state page) or countyMode (county page), lock the mode
+  const [searchMode, setSearchMode] = useState<SearchMode>(countyMode ? 'county' : 'state');
 
   // ── State mode data ──
   const regions = getAllRegions().sort((a, b) => a.region_name.localeCompare(b.region_name));
@@ -128,7 +128,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
         regionCode: countyRegion,
         cityName:   county?.city_name ?? '',
         serviceSlug,
-        label: [svc?.shortName, county && `in ${county.city_name}`, countyRegion].filter(Boolean).join(' '),
+        label: [svc?.name, county && `in ${county.city_name}`, countyRegion].filter(Boolean).join(' '),
         path,
       }));
     } else {
@@ -137,7 +137,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
         regionCode,
         cityName,
         serviceSlug,
-        label: [svc?.shortName, cityName && `in ${cityName}`, regionCode].filter(Boolean).join(' '),
+        label: [svc?.name, cityName && `in ${cityName}`, regionCode].filter(Boolean).join(' '),
         path,
       }));
     }
@@ -149,34 +149,36 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
   const canSubmit = searchMode === 'county' ? !!countyValue : !!regionCode;
 
   const selClass = `w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white
-    focus:outline-none focus:ring-2 focus:ring-brand-blue
+    focus:outline-none focus:ring-2 focus:ring-brand-action
     disabled:bg-gray-50 disabled:text-gray-400`;
 
   return (
     <div>
-      {/* ── State / County top toggle ── */}
-      <div className="flex items-center bg-gray-100 rounded-lg p-1 gap-1 mb-4">
-        <button
-          type="button"
-          onClick={() => handleModeChange('state')}
-          className={`flex-1 text-sm py-1.5 rounded-md font-semibold transition-all
-            ${searchMode === 'state'
-              ? 'bg-white text-brand-blue shadow-sm'
-              : 'text-brand-gray hover:text-brand-dark'}`}
-        >
-          Search by State
-        </button>
-        <button
-          type="button"
-          onClick={() => handleModeChange('county')}
-          className={`flex-1 text-sm py-1.5 rounded-md font-semibold transition-all
-            ${searchMode === 'county'
-              ? 'bg-white text-brand-blue shadow-sm'
-              : 'text-brand-gray hover:text-brand-dark'}`}
-        >
-          Search by County
-        </button>
-      </div>
+      {/* ── State / County top toggle — hidden on state/county pages ── */}
+      {!hideRegion && !countyMode && (
+        <div className="flex items-center bg-gray-100 rounded-lg p-1 gap-1 mb-4">
+          <button
+            type="button"
+            onClick={() => handleModeChange('state')}
+            className={`flex-1 text-sm py-1.5 rounded-md font-semibold transition-all
+              ${searchMode === 'state'
+                ? 'bg-white text-brand-action shadow-sm'
+                : 'text-brand-gray hover:text-brand-dark'}`}
+          >
+            Search by State
+          </button>
+          <button
+            type="button"
+            onClick={() => handleModeChange('county')}
+            className={`flex-1 text-sm py-1.5 rounded-md font-semibold transition-all
+              ${searchMode === 'county'
+                ? 'bg-white text-brand-action shadow-sm'
+                : 'text-brand-gray hover:text-brand-dark'}`}
+          >
+            Search by County
+          </button>
+        </div>
+      )}
 
       <form onSubmit={handleSearch} className="space-y-4">
 
@@ -185,7 +187,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
           <>
             {hideRegion && regionName ? (
               <div className="flex items-center gap-2 text-sm text-brand-gray">
-                <svg className="w-4 h-4 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-brand-action shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -228,6 +230,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
                   options={serviceOptions}
                   allLabel="All services"
                   placeholder="Search services…"
+                  disabled={!regionCode}
                   className={selClass}
                 />
               </div>
@@ -259,6 +262,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
                 options={serviceOptions}
                 allLabel="All services"
                 placeholder="Search services…"
+                disabled={!countyValue}
                 className={selClass}
               />
             </div>
@@ -268,7 +272,7 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
         <button
           type="submit"
           disabled={!canSubmit}
-          className="btn-orange text-sm py-2.5 px-8 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary text-sm py-2.5 px-8 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -278,24 +282,6 @@ export default function SearchWidget({ compact = false, hideRegion = false }: Pr
         </button>
       </form>
 
-      {/* Recent searches */}
-      {!compact && recentSearches.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs text-brand-gray mb-2 font-medium">Recent searches:</p>
-          <div className="flex flex-wrap gap-2">
-            {recentSearches.map((s) => (
-              <button
-                key={s.path}
-                onClick={() => router.push(s.path)}
-                className="text-xs bg-brand-light text-brand-blue border border-blue-100
-                  px-3 py-1 rounded-full hover:bg-brand-blue hover:text-white transition-colors"
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

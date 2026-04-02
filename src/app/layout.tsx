@@ -1,24 +1,9 @@
 import type { Metadata } from 'next';
-import { Merriweather, Source_Sans_3 } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ReduxProvider from '@/store/ReduxProvider';
 import ToastContainer from '@/components/ui/ToastContainer';
-
-const merriweather = Merriweather({
-  subsets: ['latin'],
-  weight: ['400', '700', '900'],
-  variable: '--font-heading',
-  display: 'swap',
-});
-
-const sourceSans = Source_Sans_3({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-body',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -36,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${merriweather.variable} ${sourceSans.variable}`}>
+    <html lang="en">
       <body className="flex min-h-screen flex-col bg-white">
         <ReduxProvider>
           <Header />

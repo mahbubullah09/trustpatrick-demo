@@ -33,9 +33,9 @@ export default async function ServiceOverviewPage({ params }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
       <nav className="text-sm text-brand-gray mb-6 flex items-center gap-1">
-        <Link href="/" className="hover:text-brand-blue">Home</Link>
+        <Link href="/" className="hover:text-brand-action">Home</Link>
         <span>/</span>
-        <Link href="/services" className="hover:text-brand-blue">Services</Link>
+        <Link href="/services" className="hover:text-brand-action">Services</Link>
         <span>/</span>
         <span className="text-brand-navy font-medium">{svc.name}</span>
       </nav>
@@ -46,8 +46,8 @@ export default async function ServiceOverviewPage({ params }: Props) {
       </p>
 
       {/* State grid */}
-      <h2 className="font-heading font-bold text-xl text-brand-navy mb-5">
-        Find {svc.shortName} Contractors by State
+      <h2 className=" font-bold text-xl text-brand-navy mb-5">
+        Find {svc.name} Contractors by State
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-14">
         {regions.map((r) => {
@@ -63,9 +63,9 @@ export default async function ServiceOverviewPage({ params }: Props) {
                   <li key={c.city_name}>
                     <Link
                       href={`/${r.region_code.toLowerCase()}/${slugify(c.city_name)}/${svc.slug}`}
-                      className="text-xs text-brand-blue hover:underline"
+                      className="text-xs text-brand-action hover:underline"
                     >
-                      {svc.shortName} in {c.city_name}
+                      {svc.name} in {c.city_name}
                     </Link>
                   </li>
                 ))}
@@ -73,7 +73,7 @@ export default async function ServiceOverviewPage({ params }: Props) {
                   <li>
                     <Link
                       href={`/${r.region_code.toLowerCase()}`}
-                      className="text-xs text-brand-gray hover:text-brand-blue"
+                      className="text-xs text-brand-gray hover:text-brand-action"
                     >
                       +{cities.length - 4} more cities →
                     </Link>
@@ -87,11 +87,11 @@ export default async function ServiceOverviewPage({ params }: Props) {
 
       {/* CTA */}
       <div className="bg-hero-gradient rounded-2xl p-8 text-white text-center">
-        <h2 className="font-heading font-bold text-2xl mb-3">
+        <h2 className=" font-bold text-2xl mb-3">
           Not Sure Which City to Pick?
         </h2>
-        <p className="text-blue-100 mb-6">
-          Use our search tool to find {svc.shortName.toLowerCase()} contractors in your exact area.
+        <p className="text-white/75 mb-6">
+          Use our search tool to find {svc.name.toLowerCase()} contractors in your exact area.
         </p>
         <Link href="/" className="btn-orange px-10">
           Search by Location

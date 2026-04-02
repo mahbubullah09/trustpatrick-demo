@@ -30,7 +30,7 @@ export default function ServicesPage() {
         {services.map((s) => (
           <div key={s.slug} className="card p-6 flex flex-col">
             <div className="text-4xl mb-4">{SERVICE_ICONS[s.slug] ?? '🔧'}</div>
-            <h2 className="font-heading font-bold text-brand-navy text-lg mb-2">{s.name}</h2>
+            <h2 className=" font-bold text-brand-navy text-lg mb-2">{s.name}</h2>
             <p className="text-sm text-brand-gray leading-relaxed flex-1 mb-4">
               {s.introParagraph
                 .replace(/\{city\}/g, 'your city')
@@ -39,7 +39,7 @@ export default function ServicesPage() {
             </p>
             <div className="space-y-2">
               <Link href={`/services/${s.slug}`} className="btn-primary text-sm w-full justify-center py-2">
-                Browse {s.shortName} Contractors
+                Browse {s.name} Contractors
               </Link>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function ServicesPage() {
 
       {/* Browse by state */}
       <div className="bg-brand-light rounded-2xl p-8">
-        <h2 className="font-heading font-bold text-xl text-brand-navy mb-2">
+        <h2 className=" font-bold text-xl text-brand-navy mb-2">
           Browse by State
         </h2>
         <p className="text-sm text-brand-gray mb-5">
@@ -62,7 +62,7 @@ export default function ServicesPage() {
                 key={r.region_code}
                 href={`/${r.region_code.toLowerCase()}`}
                 className="text-sm bg-white border border-gray-200 text-brand-navy px-3 py-1.5
-                  rounded-lg hover:border-brand-blue hover:text-brand-blue transition-colors"
+                  rounded-lg hover:border-brand-action hover:text-brand-action transition-colors"
               >
                 {r.region_name}
               </Link>

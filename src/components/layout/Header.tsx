@@ -4,130 +4,238 @@ import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleMobileMenu, closeMobileMenu, openSearchDrawer } from '@/store/slices/uiSlice';
 import { selectMobileMenuOpen, selectSearchDrawerOpen } from '@/store/selectors';
-import { services } from '@/data/services';
 import SearchWidget from '@/components/search/SearchWidget';
 
+const NAV_LINKS = [
+  { label: 'About',             href: '/about' },
+  { label: 'How It Works',      href: '/how-it-works' },
+  { label: 'Why Trust Patrick', href: '/why-trust-patrick' },
+  { label: 'Expert Interviews', href: '/expert-interviews' },
+  { label: 'Reviews',           href: '/reviews' },
+  { label: 'Resources',         href: '/resources' },
+  { label: 'Contact',           href: '/contact' },
+];
+
+const SOCIAL_LINKS = [
+  {
+    label: 'Facebook',
+    href: 'https://facebook.com/trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://linkedin.com/company/trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Instagram',
+    href: 'https://instagram.com/trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'YouTube',
+    href: 'https://youtube.com/@trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Rumble',
+    href: 'https://rumble.com/trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.951 13.938l-6.107 3.528A2.25 2.25 0 017.5 15.528V8.472a2.25 2.25 0 013.344-1.938l6.107 3.528a2.25 2.25 0 010 3.876z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'X',
+    href: 'https://x.com/trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'TikTok',
+    href: 'https://tiktok.com/@trustpatrick',
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+      </svg>
+    ),
+  },
+];
+
 export default function Header() {
-  const dispatch        = useAppDispatch();
-  const mobileOpen      = useAppSelector(selectMobileMenuOpen);
-  const drawerOpen      = useAppSelector(selectSearchDrawerOpen);
+  const dispatch   = useAppDispatch();
+  const mobileOpen = useAppSelector(selectMobileMenuOpen);
+  const drawerOpen = useAppSelector(selectSearchDrawerOpen);
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="sticky top-0 z-50">
 
-            {/* Logo */}
-            <Link href="/" onClick={() => dispatch(closeMobileMenu())}
-              className="flex items-center gap-2 shrink-0">
-              <span className="font-heading font-black text-xl text-brand-navy">
-                Trust<span className="text-brand-blue">Patrick</span>
-              </span>
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-6">
-              {services.map((s) => (
-                <Link key={s.slug} href={`/services/${s.slug}`}
-                  className="text-sm font-medium text-brand-gray hover:text-brand-blue transition-colors">
-                  {s.shortName}
-                </Link>
-              ))}
-              <Link href="/about"
-                className="text-sm font-medium text-brand-gray hover:text-brand-blue transition-colors">
-                About
-              </Link>
-            </nav>
-
-            {/* Desktop CTA + search icon */}
-            <div className="hidden md:flex items-center gap-3">
-              <button onClick={() => dispatch(openSearchDrawer())}
-                aria-label="Search"
-                className="p-2 text-brand-gray hover:text-brand-blue transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-              <Link href="/" className="btn-orange text-sm py-2">
-                Get Free Estimates
-              </Link>
+        {/* ── Top bar ── */}
+        <div className="bg-brand-darker text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-9">
+              {/* Left links */}
+              <div className="flex items-center gap-5 text-xs font-medium">
+                <a href="https://trustpatrick.com/create-account"
+                  className="hover:text-brand-gold transition-colors whitespace-nowrap">
+                  Homeowner: Create Account
+                </a>
+                <a href="https://pros.trustpatrick.com/get-listed/"
+                  target="_blank" rel="noopener noreferrer"
+                  className="hover:text-brand-gold transition-colors whitespace-nowrap">
+                  Contractor: Get Listed
+                </a>
+              </div>
+              {/* Social icons */}
+              <div className="flex items-center gap-3">
+                {SOCIAL_LINKS.map((s) => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="text-white/55 hover:text-white transition-colors">
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
             </div>
-
-            {/* Mobile buttons */}
-            <div className="md:hidden flex items-center gap-2">
-              <button onClick={() => dispatch(openSearchDrawer())}
-                aria-label="Search"
-                className="p-2 text-brand-gray hover:text-brand-blue transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-              <button onClick={() => dispatch(toggleMobileMenu())}
-                aria-label="Toggle menu"
-                className="p-2 rounded-md text-brand-gray hover:text-brand-navy">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {mobileOpen
-                    ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-                </svg>
-              </button>
-            </div>
-
           </div>
         </div>
 
-        {/* Mobile nav menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-2">
-            {services.map((s) => (
-              <Link key={s.slug} href={`/services/${s.slug}`}
-                onClick={() => dispatch(closeMobileMenu())}
-                className="block text-sm font-medium text-brand-gray hover:text-brand-blue py-2 border-b border-gray-50">
-                {s.name}
+        {/* ── Main nav ── */}
+        <div className="bg-white border-b border-gray-100 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+
+              {/* Logo */}
+              <Link href="/" onClick={() => dispatch(closeMobileMenu())}
+                className="flex items-center gap-2.5 shrink-0">
+                {/* Shield icon */}
+                <svg className="w-9 h-9" viewBox="0 0 40 44" fill="none">
+                  <path d="M20 2L4 8v12c0 10.5 6.8 20.3 16 23 9.2-2.7 16-12.5 16-23V8L20 2z"
+                    fill="#001b33" />
+                  <path d="M20 6L7 11v9c0 8.5 5.5 16.4 13 18.7C27.5 36.4 33 28.5 33 20V11L20 6z"
+                    fill="#1a5a8a" />
+                  <path d="M14 22l4 4 8-8" stroke="white" strokeWidth="2.5"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <div className="leading-tight">
+                  <span className=" font-black text-xl text-brand-navy tracking-tight">
+                    TrustPatrick
+                  </span>
+                  <p className="text-[9px] font-bold tracking-[0.15em] text-brand-gray uppercase -mt-0.5">
+                    Referral Network
+                  </p>
+                </div>
               </Link>
-            ))}
-            <Link href="/about" onClick={() => dispatch(closeMobileMenu())}
-              className="block text-sm font-medium text-brand-gray hover:text-brand-blue py-2 border-b border-gray-50">
-              About
-            </Link>
-            <Link href="/" onClick={() => dispatch(closeMobileMenu())}
-              className="btn-orange text-sm w-full justify-center mt-3">
-              Get Free Estimates
-            </Link>
+
+              {/* Desktop nav */}
+              <nav className="hidden lg:flex items-center gap-6">
+                {NAV_LINKS.map((l) => (
+                  <Link key={l.href} href={l.href}
+                    className="text-sm font-medium text-brand-navy hover:text-brand-action transition-colors whitespace-nowrap">
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Find A Pro CTA */}
+              <div className="hidden lg:flex items-center gap-3">
+                <Link href="/find-contractors"
+                  className="flex items-center gap-2 bg-brand-action hover:bg-brand-mid text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-colors shadow-md">
+                  Find A Pro
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+
+              {/* Mobile buttons */}
+              <div className="lg:hidden flex items-center gap-2">
+                <button onClick={() => dispatch(openSearchDrawer())}
+                  aria-label="Search"
+                  className="p-2 text-brand-gray hover:text-brand-action transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+                <button onClick={() => dispatch(toggleMobileMenu())}
+                  aria-label="Toggle menu"
+                  className="p-2 rounded-md text-brand-gray hover:text-brand-navy">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {mobileOpen
+                      ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+                  </svg>
+                </button>
+              </div>
+
+            </div>
           </div>
-        )}
+
+          {/* Mobile menu */}
+          {mobileOpen && (
+            <div className="lg:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-1">
+              {NAV_LINKS.map((l) => (
+                <Link key={l.href} href={l.href}
+                  onClick={() => dispatch(closeMobileMenu())}
+                  className="block text-sm font-medium text-brand-navy hover:text-brand-action py-2.5 border-b border-gray-50">
+                  {l.label}
+                </Link>
+              ))}
+              <Link href="/find-contractors"
+                onClick={() => dispatch(closeMobileMenu())}
+                className="flex items-center justify-center gap-2 bg-brand-action hover:bg-brand-mid text-white font-semibold text-sm px-5 py-3 rounded-full mt-3 transition-colors">
+                Find A Pro
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          )}
+        </div>
       </header>
 
-      {/* Search drawer overlay */}
+      {/* Search drawer */}
       {drawerOpen && <SearchDrawer />}
     </>
   );
 }
 
 function SearchDrawer() {
-  const dispatch    = useAppDispatch();
-  const drawerOpen  = useAppSelector(selectSearchDrawerOpen);
+  const dispatch   = useAppDispatch();
+  const drawerOpen = useAppSelector(selectSearchDrawerOpen);
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
-        onClick={() => dispatch({ type: 'ui/closeSearchDrawer' })}
-      />
-
-      {/* Drawer panel */}
+      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+        onClick={() => dispatch({ type: 'ui/closeSearchDrawer' })} />
       <div className={`fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl
         transform transition-transform duration-300 ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-5 border-b border-gray-100">
-          <h2 className="font-heading font-bold text-brand-navy text-lg">Find Contractors</h2>
-          <button
-            onClick={() => dispatch({ type: 'ui/closeSearchDrawer' })}
-            className="p-2 text-brand-gray hover:text-brand-navy rounded-md"
-            aria-label="Close search">
+          <h2 className=" font-bold text-brand-navy text-lg">Find Contractors</h2>
+          <button onClick={() => dispatch({ type: 'ui/closeSearchDrawer' })}
+            className="p-2 text-brand-gray hover:text-brand-navy rounded-md" aria-label="Close">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>

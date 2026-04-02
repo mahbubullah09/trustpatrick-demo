@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
@@ -17,6 +18,7 @@
     "react-redux": "^9.1.0"
   },
   "devDependencies": {
+    "tsx": "^4.19.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

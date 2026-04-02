@@ -12,7 +12,7 @@ export default function AboutPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       {/* Hero */}
       <div className="text-center mb-14">
-        <h1 className="font-heading text-4xl md:text-5xl font-black text-brand-navy mb-4">
+        <h1 className=" text-4xl md:text-5xl font-black text-brand-navy mb-4">
           About TrustPatrick
         </h1>
         <p className="text-brand-gray text-lg max-w-2xl mx-auto">
@@ -49,7 +49,7 @@ export default function AboutPage() {
           { value: '50',     label: 'States' },
         ].map(({ value, label }) => (
           <div key={label} className="card p-5 text-center">
-            <div className="font-heading font-black text-3xl text-brand-blue mb-1">{value}</div>
+            <div className=" font-black text-3xl text-brand-action mb-1">{value}</div>
             <div className="text-sm text-brand-gray font-medium">{label}</div>
           </div>
         ))}
@@ -57,7 +57,7 @@ export default function AboutPage() {
 
       {/* Values */}
       <div className="bg-brand-light rounded-2xl p-8 mb-14">
-        <h2 className="font-heading font-bold text-2xl text-brand-navy mb-6 text-center">
+        <h2 className=" font-bold text-2xl text-brand-navy mb-6 text-center">
           What We Stand For
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -80,7 +80,7 @@ export default function AboutPage() {
           ].map(({ icon, title, desc }) => (
             <div key={title} className="text-center">
               <div className="text-4xl mb-3">{icon}</div>
-              <h3 className="font-heading font-bold text-brand-navy mb-2">{title}</h3>
+              <h3 className=" font-bold text-brand-navy mb-2">{title}</h3>
               <p className="text-sm text-brand-gray leading-relaxed">{desc}</p>
             </div>
           ))}
@@ -89,7 +89,7 @@ export default function AboutPage() {
 
       {/* CTA */}
       <div className="text-center">
-        <h2 className="font-heading font-bold text-2xl text-brand-navy mb-4">
+        <h2 className=" font-bold text-2xl text-brand-navy mb-4">
           Ready to Find a Contractor You Can Trust?
         </h2>
         <Link href="/" className="btn-orange px-10">

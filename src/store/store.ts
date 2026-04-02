@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import searchReducer from './slices/searchSlice';
 import expertsReducer from './slices/expertsSlice';
 import uiReducer from './slices/uiSlice';
+import quoteReducer from './slices/quoteSlice';
 
 export const store = configureStore({
   reducer: {
     search: searchReducer,
     experts: expertsReducer,
     ui: uiReducer,
+    quote: quoteReducer,
   },
 });
 

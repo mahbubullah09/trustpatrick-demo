@@ -1,16 +1,5 @@
 import ExpertsGrid from '@/components/experts/ExpertsGrid';
-import type { Expert } from '@/lib/api';
-
-interface Props {
-  city: string;
-  region: string;
-  regionCode: string;
-  initialExperts: Expert[];
-  zipCodes: string[];
-  serviceCategoryCodes: string[];
-  ctaText: string;
-  cacheKey: string;
-}
+import type { ServiceTemplateProps } from './index';
 
 export default function ConcreteTemplate({
   city,
@@ -21,7 +10,7 @@ export default function ConcreteTemplate({
   serviceCategoryCodes,
   ctaText,
   cacheKey,
-}: Props) {
+}: ServiceTemplateProps) {
   return (
     <div className="space-y-8">
 
@@ -38,7 +27,7 @@ export default function ConcreteTemplate({
 
       {/* Intro */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-3">
+        <h2 className=" font-bold text-brand-navy text-xl mb-3">
           Concrete Driveway Contractors in {city}, {region}
         </h2>
         <p className="text-brand-gray leading-relaxed mb-3">
@@ -57,7 +46,7 @@ export default function ConcreteTemplate({
 
       {/* Concrete vs asphalt */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-4">
+        <h2 className=" font-bold text-brand-navy text-xl mb-4">
           Concrete vs. Asphalt: Which Is Right for {city} Homeowners?
         </h2>
         <div className="overflow-x-auto">
@@ -65,7 +54,7 @@ export default function ConcreteTemplate({
             <thead>
               <tr className="bg-brand-light">
                 <th className="text-left px-4 py-2 font-semibold text-brand-navy border border-gray-200">Factor</th>
-                <th className="text-left px-4 py-2 font-semibold text-brand-blue border border-gray-200">Concrete</th>
+                <th className="text-left px-4 py-2 font-semibold text-brand-action border border-gray-200">Concrete</th>
                 <th className="text-left px-4 py-2 font-semibold text-brand-gray border border-gray-200">Asphalt</th>
               </tr>
             </thead>
@@ -81,7 +70,7 @@ export default function ConcreteTemplate({
               ].map(([factor, concrete, asphalt]) => (
                 <tr key={factor as string} className="even:bg-gray-50">
                   <td className="px-4 py-2 border border-gray-200 font-medium text-brand-dark">{factor}</td>
-                  <td className="px-4 py-2 border border-gray-200 text-brand-blue">{concrete}</td>
+                  <td className="px-4 py-2 border border-gray-200 text-brand-action">{concrete}</td>
                   <td className="px-4 py-2 border border-gray-200 text-brand-gray">{asphalt}</td>
                 </tr>
               ))}
@@ -92,7 +81,7 @@ export default function ConcreteTemplate({
 
       {/* Cost guide */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-4">
+        <h2 className=" font-bold text-brand-navy text-xl mb-4">
           Concrete Driveway Cost Estimates for {city}, {regionCode}
         </h2>
         <p className="text-brand-gray mb-4">
@@ -108,7 +97,7 @@ export default function ConcreteTemplate({
           ].map(({ label, range, desc }) => (
             <div key={label} className="bg-brand-light rounded-lg p-4">
               <div className="font-semibold text-brand-navy text-sm mb-1">{label}</div>
-              <div className="text-brand-blue font-bold text-lg">{range}</div>
+              <div className="text-brand-action font-bold text-lg">{range}</div>
               <div className="text-xs text-brand-gray mt-1">{desc}</div>
             </div>
           ))}
@@ -120,7 +109,7 @@ export default function ConcreteTemplate({
 
       {/* Warning signs */}
       <section className="card p-6 border-l-4 border-brand-orange">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-4">
+        <h2 className=" font-bold text-brand-navy text-xl mb-4">
           Concrete Driveway Scams to Watch Out For in {city}
         </h2>
         <p className="text-brand-gray mb-4 text-sm">
@@ -159,7 +148,7 @@ export default function ConcreteTemplate({
 
       {/* FAQ */}
       <section className="card p-6">
-        <h2 className="font-heading font-bold text-brand-navy text-xl mb-5">
+        <h2 className=" font-bold text-brand-navy text-xl mb-5">
           Concrete Driveway FAQs — {city}, {region}
         </h2>
         <div className="space-y-5">
@@ -184,7 +173,7 @@ export default function ConcreteTemplate({
             <details key={q} className="group border-b border-gray-100 pb-4 last:border-0 last:pb-0">
               <summary className="font-semibold text-brand-navy text-sm cursor-pointer flex items-start justify-between gap-3 list-none">
                 <span>{q}</span>
-                <span className="text-brand-blue text-lg mt-0.5 flex-shrink-0 group-open:rotate-45 transition-transform">+</span>
+                <span className="text-brand-action text-lg mt-0.5 flex-shrink-0 group-open:rotate-45 transition-transform">+</span>
               </summary>
               <p className="text-sm text-brand-gray mt-3 leading-relaxed">{a}</p>
             </details>

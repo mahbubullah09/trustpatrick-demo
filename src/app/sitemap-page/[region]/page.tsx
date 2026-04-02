@@ -46,9 +46,9 @@ export default async function StateSitemapPage({ params }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
       <nav className="text-sm text-brand-gray mb-6 flex items-center gap-1 flex-wrap">
-        <Link href="/" className="hover:text-brand-blue">Home</Link>
+        <Link href="/" className="hover:text-brand-action">Home</Link>
         <span>/</span>
-        <Link href="/sitemap-page" className="hover:text-brand-blue">Sitemap</Link>
+        <Link href="/sitemap-page" className="hover:text-brand-action">Sitemap</Link>
         <span>/</span>
         <span className="text-brand-navy font-medium">{regionData.region_name}</span>
       </nav>
@@ -85,7 +85,7 @@ export default async function StateSitemapPage({ params }: Props) {
         <div key={letter} className="mb-10">
           {/* Letter divider */}
           <div className="flex items-center gap-3 mb-4">
-            <span className="w-8 h-8 rounded-full bg-brand-navy text-white font-heading font-black text-sm flex items-center justify-center shrink-0">
+            <span className="w-8 h-8 rounded-full bg-brand-navy text-white  font-black text-sm flex items-center justify-center shrink-0">
               {letter}
             </span>
             <div className="flex-1 h-px bg-gray-100" />
@@ -102,7 +102,7 @@ export default async function StateSitemapPage({ params }: Props) {
                     <div>
                       <Link
                         href={`/${region}/${citySlug}`}
-                        className="font-heading font-bold text-brand-navy hover:text-brand-blue text-base"
+                        className=" font-bold text-brand-navy hover:text-brand-action text-base"
                       >
                         {city.city_name}
                       </Link>
@@ -115,7 +115,7 @@ export default async function StateSitemapPage({ params }: Props) {
                     </div>
                     <Link
                       href={`/${region}/${citySlug}`}
-                      className="text-xs text-brand-blue hover:underline shrink-0"
+                      className="text-xs text-brand-action hover:underline shrink-0"
                     >
                       City page →
                     </Link>
@@ -127,10 +127,10 @@ export default async function StateSitemapPage({ params }: Props) {
                       <Link
                         key={svc.slug}
                         href={`/${region}/${citySlug}/${svc.slug}`}
-                        className="text-xs bg-brand-light text-brand-blue border border-blue-100
-                          px-3 py-1.5 rounded-full hover:bg-brand-blue hover:text-white transition-colors"
+                        className="text-xs bg-brand-light text-brand-action border border-brand-action/20
+                          px-3 py-1.5 rounded-full hover:bg-brand-action hover:text-white transition-colors"
                       >
-                        {svc.shortName} in {city.city_name}
+                        {svc.name} in {city.city_name}
                       </Link>
                     ))}
                   </div>
@@ -143,7 +143,7 @@ export default async function StateSitemapPage({ params }: Props) {
 
       {/* Back link */}
       <div className="mt-10 pt-6 border-t border-gray-100">
-        <Link href="/sitemap-page" className="text-sm text-brand-blue hover:underline flex items-center gap-1">
+        <Link href="/sitemap-page" className="text-sm text-brand-action hover:underline flex items-center gap-1">
           ← Back to full sitemap
         </Link>
       </div>

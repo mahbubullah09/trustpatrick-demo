@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllRegions, getCitiesInRegion } from '@/data/locations';
+import { getAllRegions, getCitiesInRegion, getAllCounties } from '@/data/locations';
 import { services } from '@/data/services';
+import { getAllCompanies } from '@/data/companies';
 
 export const metadata: Metadata = {
   title: 'Sitemap — TrustPatrick',
@@ -9,119 +10,124 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://trustpatrick.com/sitemap-page' },
 };
 
-// Group states alphabetically by first letter
-function groupByLetter(regions: { region_name: string; region_code: string }[]) {
-  const map = new Map<string, typeof regions>();
-  for (const r of regions) {
-    const letter = r.region_name[0].toUpperCase();
-    if (!map.has(letter)) map.set(letter, []);
-    map.get(letter)!.push(r);
-  }
-  return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-}
-
-const MAIN_PAGES = [
-  { label: 'Home',            href: '/' },
-  { label: 'About',           href: '/about' },
-  { label: 'Contact',         href: '/contact' },
-  { label: 'Privacy Policy',  href: '/privacy' },
-  { label: 'Terms of Service',href: '/terms' },
-];
-
 export default function SitemapPage() {
-  const allRegions = getAllRegions().sort((a, b) => a.region_name.localeCompare(b.region_name));
-  const grouped    = groupByLetter(allRegions);
+  const allRegions  = getAllRegions();
+  const companies   = getAllCompanies();
+  const allCounties = getAllCounties();
+
+  const cityCount = allRegions.reduce(
+    (sum, r) => sum + getCitiesInRegion(r.region_code).length, 0
+  );
+
+  const sections = [
+    {
+      href: '/sitemap-page/main-pages',
+      label: 'Main Pages',
+      count: 6,
+      description: 'Home, About, Contact and more',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/services',
+      label: 'Services',
+      count: services.length,
+      description: 'All contractor service types',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/contractors',
+      label: 'Contractors',
+      count: companies.length,
+      description: 'All verified contractor profiles',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/states',
+      label: 'States',
+      count: allRegions.length,
+      description: 'Browse all US states',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/cities',
+      label: 'Cities',
+      count: cityCount,
+      description: 'All cities across every state',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/counties',
+      label: 'Counties',
+      count: allCounties.length,
+      description: 'All counties across every state',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+      ),
+    },
+    {
+      href: '/sitemap-page/categories',
+      label: 'Categories',
+      count: services.length * allRegions.length,
+      description: 'Services by state',
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="mb-10">
-        <nav className="text-sm text-brand-gray mb-4 flex items-center gap-1">
-          <Link href="/" className="hover:text-brand-blue">Home</Link>
-          <span>/</span>
-          <span className="text-brand-navy font-medium">Sitemap</span>
-        </nav>
-        <h1 className="section-title mb-2">Sitemap</h1>
-        <p className="text-brand-gray">
-          Browse all {allRegions.length} states and every city + service page on TrustPatrick.
-        </p>
-      </div>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav className="text-sm text-brand-gray mb-4 flex items-center gap-1">
+        <Link href="/" className="hover:text-brand-action">Home</Link>
+        <span>/</span>
+        <span className="text-brand-navy font-medium">Sitemap</span>
+      </nav>
+      <h1 className="section-title mb-2">Sitemap</h1>
+      <p className="text-brand-gray mb-10">Browse all pages on TrustPatrick.</p>
 
-      {/* ── Main pages ── */}
-      <section className="mb-12">
-        <h2 className="font-heading font-bold text-xl text-brand-navy mb-4 pb-2 border-b border-gray-100">
-          Main Pages
-        </h2>
-        <ul className="flex flex-wrap gap-3">
-          {MAIN_PAGES.map(({ label, href }) => (
-            <li key={href}>
-              <Link href={href}
-                className="text-sm text-brand-blue hover:underline border border-blue-100 bg-brand-light px-3 py-1.5 rounded-full">
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── Services ── */}
-      <section className="mb-12">
-        <h2 className="font-heading font-bold text-xl text-brand-navy mb-4 pb-2 border-b border-gray-100">
-          Services
-        </h2>
-        <ul className="flex flex-wrap gap-3">
-          {services.map((s) => (
-            <li key={s.slug}>
-              <Link href={`/services/${s.slug}`}
-                className="text-sm text-brand-blue hover:underline border border-blue-100 bg-brand-light px-3 py-1.5 rounded-full">
-                {s.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* ── States ── */}
-      <section>
-        <h2 className="font-heading font-bold text-xl text-brand-navy mb-2 pb-2 border-b border-gray-100">
-          Browse by State
-        </h2>
-        <p className="text-sm text-brand-gray mb-6">
-          Click a state to see all cities and service pages within it.
-        </p>
-
-        {grouped.map(([letter, regions]) => (
-          <div key={letter} className="mb-8">
-            {/* Letter anchor */}
-            <div className="flex items-center gap-3 mb-3">
-              <span className="w-8 h-8 rounded-full bg-brand-navy text-white font-heading font-black text-sm flex items-center justify-center shrink-0">
-                {letter}
-              </span>
-              <div className="flex-1 h-px bg-gray-100" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sections.map((s) => (
+          <Link key={s.href} href={s.href}
+            className="card p-6 flex items-start gap-4 hover:border-brand-action hover:shadow-md transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-brand-light flex items-center justify-center text-brand-action shrink-0 group-hover:bg-brand-light transition-colors">
+              {s.icon}
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {regions.map((r) => {
-                const cityCount = getCitiesInRegion(r.region_code).length;
-                return (
-                  <Link
-                    key={r.region_code}
-                    href={`/sitemap-page/${r.region_code.toLowerCase()}`}
-                    className="card px-4 py-3 hover:border-brand-blue hover:text-brand-blue transition-colors group"
-                  >
-                    <p className="text-sm font-semibold text-brand-navy group-hover:text-brand-blue leading-tight">
-                      {r.region_name}
-                    </p>
-                    <p className="text-xs text-brand-gray mt-0.5">
-                      {cityCount} {cityCount === 1 ? 'city' : 'cities'}
-                    </p>
-                  </Link>
-                );
-              })}
+            <div className="flex-1 min-w-0">
+              <p className=" font-bold text-brand-navy group-hover:text-brand-action transition-colors">
+                {s.label}
+              </p>
+              <p className="text-xs text-brand-gray mt-0.5">{s.description}</p>
+              <p className="text-xs font-semibold text-brand-action mt-2">
+                {s.count.toLocaleString()} pages →
+              </p>
             </div>
-          </div>
+          </Link>
         ))}
-      </section>
+      </div>
     </div>
   );
 }

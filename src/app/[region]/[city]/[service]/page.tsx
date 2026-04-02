@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { getAllRegions, getCitiesInRegion, getLocation, slugify } from '@/data/locations';
 import { getService, fillTemplate, services } from '@/data/services';
 import { fetchFeaturedExperts } from '@/lib/api';
-import AsphaltTemplate from '@/components/service-templates/AsphaltTemplate';
-import ConcreteTemplate from '@/components/service-templates/ConcreteTemplate';
+import { serviceTemplates } from '@/components/service-templates';
 import SearchWidget from '@/components/search/SearchWidget';
 import SearchHydrator from '@/components/search/SearchHydrator';
 
@@ -86,7 +85,7 @@ export default async function ServiceLandingPage({ params }: Props) {
       {/* Hero */}
       <div className="bg-hero-gradient text-white py-12 px-4">
         <div className="max-w-5xl mx-auto">
-          <nav className="text-sm text-blue-200 mb-4 flex items-center gap-1 flex-wrap">
+          <nav className="text-sm text-white/75 mb-4 flex items-center gap-1 flex-wrap">
             <Link href="/" className="hover:text-white">Home</Link>
             <span>/</span>
             <Link href={`/${region}`} className="hover:text-white">{loc.region_name}</Link>
@@ -95,8 +94,8 @@ export default async function ServiceLandingPage({ params }: Props) {
             <span>/</span>
             <span className="text-white font-medium">{svc.name}</span>
           </nav>
-          <h1 className="font-heading text-3xl md:text-4xl font-black mb-3 leading-tight">{h1}</h1>
-          <p className="text-blue-100 text-lg max-w-2xl">{intro.slice(0, 160)}…</p>
+          <h1 className=" text-3xl md:text-4xl font-black mb-3 leading-tight">{h1}</h1>
+          <p className="text-white/75 text-lg max-w-2xl">{intro.slice(0, 160)}…</p>
         </div>
       </div>
 
@@ -106,34 +105,26 @@ export default async function ServiceLandingPage({ params }: Props) {
           {/* ── Main column ── */}
           <div className="lg:col-span-2 space-y-10">
 
-            {service === 'asphalt-paving-companies' && (
-              <AsphaltTemplate
-                city={loc.city_name}
-                region={loc.region_name}
-                regionCode={loc.region_code}
-                initialExperts={initialExperts}
-                zipCodes={loc.zipcodes}
-                serviceCategoryCodes={svc.serviceCategoryCodes}
-                ctaText={svc.ctaText}
-                cacheKey={cacheKey}
-              />
-            )}
-            {service === 'concrete-driveway-contractors' && (
-              <ConcreteTemplate
-                city={loc.city_name}
-                region={loc.region_name}
-                regionCode={loc.region_code}
-                initialExperts={initialExperts}
-                zipCodes={loc.zipcodes}
-                serviceCategoryCodes={svc.serviceCategoryCodes}
-                ctaText={svc.ctaText}
-                cacheKey={cacheKey}
-              />
-            )}
+            {(() => {
+              const Template = serviceTemplates[service];
+              if (!Template) return null;
+              return (
+                <Template
+                  city={loc.city_name}
+                  region={loc.region_name}
+                  regionCode={loc.region_code}
+                  initialExperts={initialExperts}
+                  zipCodes={loc.zipcodes}
+                  serviceCategoryCodes={svc.serviceCategoryCodes}
+                  ctaText={svc.ctaText}
+                  cacheKey={cacheKey}
+                />
+              );
+            })()}
 
             {/* Zip codes served */}
             <section className="bg-brand-light rounded-xl p-6">
-              <h2 className="font-heading font-bold text-brand-navy mb-2 text-lg">
+              <h2 className=" font-bold text-brand-navy mb-2 text-lg">
                 Areas Served in {loc.city_name}
               </h2>
               <p className="text-sm text-brand-gray mb-3">
@@ -155,7 +146,7 @@ export default async function ServiceLandingPage({ params }: Props) {
 
             {/* Refine search — SearchWidget reads/writes Redux */}
             <div className="card p-5">
-              <h3 className="font-heading font-bold text-brand-navy mb-4 text-base">
+              <h3 className=" font-bold text-brand-navy mb-4 text-base">
                 Refine Your Search
               </h3>
               <SearchWidget compact />
@@ -163,14 +154,14 @@ export default async function ServiceLandingPage({ params }: Props) {
 
             {/* Other services in this city */}
             <div className="card p-5">
-              <h3 className="font-heading font-bold text-brand-navy mb-4 text-base">
+              <h3 className=" font-bold text-brand-navy mb-4 text-base">
                 Other Services in {loc.city_name}
               </h3>
               <ul className="space-y-2">
                 {services.filter((s) => s.slug !== service).map((s) => (
                   <li key={s.slug}>
                     <Link href={`/${region}/${city}/${s.slug}`}
-                      className="text-sm text-brand-blue hover:underline">
+                      className="text-sm text-brand-action hover:underline">
                       → {s.name}
                     </Link>
                   </li>
@@ -180,10 +171,10 @@ export default async function ServiceLandingPage({ params }: Props) {
 
             {/* Trust block */}
             <div className="bg-brand-navy text-white rounded-xl p-5">
-              <h3 className="font-heading font-bold text-white mb-3 text-base">
+              <h3 className=" font-bold text-white mb-3 text-base">
                 Why TrustPatrick?
               </h3>
-              <ul className="space-y-2 text-sm text-blue-200">
+              <ul className="space-y-2 text-sm text-white/75">
                 {[
                   'Every contractor is vetted',
                   'Real homeowner reviews',
@@ -201,15 +192,15 @@ export default async function ServiceLandingPage({ params }: Props) {
             {/* Nearby cities */}
             {nearbyCities.length > 0 && (
               <div className="card p-5">
-                <h3 className="font-heading font-bold text-brand-navy mb-4 text-base">
+                <h3 className=" font-bold text-brand-navy mb-4 text-base">
                   Nearby Cities in {loc.region_name}
                 </h3>
                 <ul className="space-y-2">
                   {nearbyCities.map((c) => (
                     <li key={c.city_name}>
                       <Link href={`/${region}/${slugify(c.city_name)}/${service}`}
-                        className="text-sm text-brand-blue hover:underline">
-                        → {svc.shortName} in {c.city_name}
+                        className="text-sm text-brand-action hover:underline">
+                        → {svc.name} in {c.city_name}
                       </Link>
                     </li>
                   ))}

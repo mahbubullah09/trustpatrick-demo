@@ -27,7 +27,7 @@ export default function ContactForm() {
   }
 
   const inputClass = `w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm
-    text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-blue`;
+    text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-action`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

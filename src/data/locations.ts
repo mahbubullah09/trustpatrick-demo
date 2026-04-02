@@ -2081,9 +2081,23 @@ export function getLocation(regionCode: string, citySlug: string): Location | un
   );
 }
 
-/** Get all cities in a region */
+/** Get all cities (non-county) in a region */
 export function getCitiesInRegion(regionCode: string): Location[] {
-  return locations.filter((l) => l.region_code.toLowerCase() === regionCode.toLowerCase());
+  return locations.filter(
+    (l) => l.region_code.toLowerCase() === regionCode.toLowerCase() && l.is_county === 0
+  );
+}
+
+/** Get all counties in a region */
+export function getCountiesInRegion(regionCode: string): Location[] {
+  return locations.filter(
+    (l) => l.region_code.toLowerCase() === regionCode.toLowerCase() && l.is_county === 1
+  );
+}
+
+/** Get all counties across all regions */
+export function getAllCounties(): Location[] {
+  return locations.filter((l) => l.is_county === 1);
 }
 
 /** Get all unique regions */
