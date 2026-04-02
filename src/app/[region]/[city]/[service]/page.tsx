@@ -56,8 +56,6 @@ export default async function ServiceLandingPage({ params }: Props) {
   // Server-side fetch — result is passed to ExpertsGrid which hydrates the Redux store
   const initialExperts = await fetchFeaturedExperts(loc.zipcodes, svc.serviceCategoryCodes);
 
-  console.log(initialExperts)
-
   // Stable cache key for this exact page
   const cacheKey = `${region}/${city}/${service}`;
 

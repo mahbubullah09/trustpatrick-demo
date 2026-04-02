@@ -193,8 +193,6 @@ export async function fetchFeaturedExperts(
     }
 
     const data: ExpertsResponse = await res.json();
-    console.log('data',data)
-
     // Return max 6 as specified
     const all = Array.isArray(data) ? data : data.experts ?? data.company_details ?? [];
     return all.slice(0, 6);
