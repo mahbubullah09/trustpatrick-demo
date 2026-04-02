@@ -142,7 +142,7 @@ export default async function ServiceLandingPage({ params }: Props) {
           </div>
 
           {/* ── Sidebar ── */}
-          <aside className="space-y-6">
+          <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
 
             {/* Refine search — SearchWidget reads/writes Redux */}
             <div className="card p-5">

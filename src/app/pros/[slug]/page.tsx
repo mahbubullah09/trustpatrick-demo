@@ -131,7 +131,7 @@ export default async function CompanyPage({ params }: Props) {
               {company.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={company.logo} alt={company.company_name}
-                  className="w-20 h-20 rounded-xl object-cover border-2 border-white/20 bg-white" />
+                  className="w-20 h-20 rounded-xl object-contain bg-white border-2 border-white/20 p-1" />
               ) : (
                 <div className="w-20 h-20 rounded-xl bg-white/10 border-2 border-white/20 flex items-center justify-center  font-black text-2xl text-white">
                   {company.initials ?? company.company_name.charAt(0)}

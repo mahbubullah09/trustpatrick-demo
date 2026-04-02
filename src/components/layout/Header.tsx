@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleMobileMenu, closeMobileMenu, openSearchDrawer } from '@/store/slices/uiSlice';
 import { selectMobileMenuOpen, selectSearchDrawerOpen } from '@/store/selectors';
@@ -127,25 +128,15 @@ export default function Header() {
             <div className="flex items-center justify-between h-16">
 
               {/* Logo */}
-              <Link href="/" onClick={() => dispatch(closeMobileMenu())}
-                className="flex items-center gap-2.5 shrink-0">
-                {/* Shield icon */}
-                <svg className="w-9 h-9" viewBox="0 0 40 44" fill="none">
-                  <path d="M20 2L4 8v12c0 10.5 6.8 20.3 16 23 9.2-2.7 16-12.5 16-23V8L20 2z"
-                    fill="#001b33" />
-                  <path d="M20 6L7 11v9c0 8.5 5.5 16.4 13 18.7C27.5 36.4 33 28.5 33 20V11L20 6z"
-                    fill="#1a5a8a" />
-                  <path d="M14 22l4 4 8-8" stroke="white" strokeWidth="2.5"
-                    strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="leading-tight">
-                  <span className=" font-black text-xl text-brand-navy tracking-tight">
-                    TrustPatrick
-                  </span>
-                  <p className="text-[9px] font-bold tracking-[0.15em] text-brand-gray uppercase -mt-0.5">
-                    Referral Network
-                  </p>
-                </div>
+              <Link href="/" onClick={() => dispatch(closeMobileMenu())} className="shrink-0">
+                <Image
+                  src="/images/trust_patrick_logo_n.webp"
+                  alt="TrustPatrick"
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
               </Link>
 
               {/* Desktop nav */}

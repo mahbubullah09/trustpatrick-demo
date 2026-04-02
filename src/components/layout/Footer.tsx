@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SOCIAL_LINKS = [
   {
@@ -69,21 +70,14 @@ export default function Footer() {
           {/* ── Brand column ── */}
           <div>
             {/* Logo */}
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
-              <svg className="w-9 h-9" viewBox="0 0 40 44" fill="none">
-                <path d="M20 2L4 8v12c0 10.5 6.8 20.3 16 23 9.2-2.7 16-12.5 16-23V8L20 2z"
-                  fill="#001b33" />
-                <path d="M20 6L7 11v9c0 8.5 5.5 16.4 13 18.7C27.5 36.4 33 28.5 33 20V11L20 6z"
-                  fill="#1a5a8a" />
-                <path d="M14 22l4 4 8-8" stroke="white" strokeWidth="2.5"
-                  strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <div className="leading-tight">
-                <span className=" font-black text-xl text-white tracking-tight">TrustPatrick</span>
-                <p className="text-[9px] font-bold tracking-[0.15em] text-white/55 uppercase -mt-0.5">
-                  Referral Network
-                </p>
-              </div>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/images/Trust-Patrick-logo.png"
+                alt="TrustPatrick"
+                width={160}
+                height={48}
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
             </Link>
 
             <p className="text-sm text-white/75 leading-relaxed mb-6 max-w-xs">

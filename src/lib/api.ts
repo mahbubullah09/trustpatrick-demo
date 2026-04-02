@@ -1,3 +1,70 @@
+const API_BASE_URL = 'https://pros.trustpatrick.com/api';
+
+// ── Projects by Location ─────────────────────────────────────────────────────
+
+export interface LocationProject {
+  title: string;
+  service_category: string;
+  city: string;
+  state: string;
+  project_date: string;
+  timeframe: string;
+  zipcode: string;
+  project_details: string;
+}
+
+export async function fetchProjectsByLocation(
+  serviceCategoryCodes: string[],
+  zipCodes: string[]
+): Promise<LocationProject[]> {
+  try {
+    const params = new URLSearchParams();
+    zipCodes.forEach((zip) => params.append('zip_codes[]', zip));
+    serviceCategoryCodes.forEach((code) => params.append('service_category_codes[]', code));
+
+    const res = await fetch(`${API_BASE_URL}/projects_by_location?${params.toString()}`, {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data.projects) ? data.projects : [];
+  } catch {
+    return [];
+  }
+}
+
+// ── Additional Contractors ────────────────────────────────────────────────────
+
+export interface AdditionalContractor {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zipcode: string;
+}
+
+export async function fetchAdditionalContractors(
+  serviceCategoryCodes: string[],
+  zipCodes: string[]
+): Promise<AdditionalContractor[]> {
+  try {
+    const params = new URLSearchParams();
+    zipCodes.forEach((zip) => params.append('zip_codes[]', zip));
+    serviceCategoryCodes.forEach((code) => params.append('service_category_codes[]', code));
+
+    const res = await fetch(`${API_BASE_URL}/additional_contractors?${params.toString()}`, {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data.company_details) ? data.company_details : [];
+  } catch {
+    return [];
+  }
+}
+
 // ── Company Profile ─────────────────────────────────────────────────────────
 
 export interface CompanyReview {
@@ -88,6 +155,7 @@ export interface Expert {
   services?: string[];
   recent_screening_date?: string;
   background_check_date?: string;
+  review?: CompanyReview | CompanyReview[];
   [key: string]: unknown;
 }
 
@@ -96,8 +164,6 @@ export interface ExpertsResponse {
   company_details?: Expert[];
   total?: number;
 }
-
-const API_BASE_URL = 'https://pros.trustpatrick.com/api';
 
 export async function fetchFeaturedExperts(
   zipCodes: string[],
