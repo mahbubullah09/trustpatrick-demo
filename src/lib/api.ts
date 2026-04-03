@@ -25,6 +25,7 @@ export async function fetchProjectsByLocation(
     const res = await fetch(`${API_BASE_URL}/projects_by_location?${params.toString()}`, {
       headers: { Accept: 'application/json' },
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return [];
     const data = await res.json();
@@ -56,6 +57,7 @@ export async function fetchAdditionalContractors(
     const res = await fetch(`${API_BASE_URL}/additional_contractors?${params.toString()}`, {
       headers: { Accept: 'application/json' },
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return [];
     const data = await res.json();
@@ -120,7 +122,7 @@ export async function fetchCompanyBySlug(slug: string): Promise<CompanyProfile |
   try {
     const res = await fetch(
       `${API_BASE_URL}/company_by_slug?company_slug=${encodeURIComponent(slug)}`,
-      { next: { revalidate: 300 } }
+      { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) }
     );
     if (!res.ok) return null;
     const data = await res.json();
@@ -185,6 +187,7 @@ export async function fetchFeaturedExperts(
       },
       // Revalidate every 5 minutes for ISR pages
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {

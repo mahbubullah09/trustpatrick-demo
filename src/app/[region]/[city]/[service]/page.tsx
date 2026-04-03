@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllRegions, getCitiesInRegion, getLocation, slugify } from '@/data/locations';
 import { getService, fillTemplate, services } from '@/data/services';
-import { fetchFeaturedExperts } from '@/lib/api';
 import { serviceTemplates } from '@/components/service-templates';
 import SearchWidget from '@/components/search/SearchWidget';
 import SearchHydrator from '@/components/search/SearchHydrator';
@@ -12,7 +11,7 @@ interface Props {
   params: Promise<{ region: string; city: string; service: string }>;
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const params: { region: string; city: string; service: string }[] = [];
   for (const r of getAllRegions()) {
     for (const c of getCitiesInRegion(r.region_code)) {
@@ -53,8 +52,8 @@ export default async function ServiceLandingPage({ params }: Props) {
 
   if (!loc || !svc) notFound();
 
-  // Server-side fetch — result is passed to ExpertsGrid which hydrates the Redux store
-  const initialExperts = await fetchFeaturedExperts(loc.zipcodes, svc.serviceCategoryCodes);
+  // Experts are fetched client-side to keep build fast and reliable.
+  const initialExperts: import('@/lib/api').Expert[] = [];
 
   // Stable cache key for this exact page
   const cacheKey = `${region}/${city}/${service}`;
